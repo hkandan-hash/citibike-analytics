@@ -1,0 +1,13 @@
+source_file,raw_rows,duplicates_removed,excluded_outside_window,excluded_missing_start_station,excluded_non_positive_duration,excluded_over_max_duration,valid_trips,valid_missing_end_station
+JC-202510-citibike-tripdata.zip,104205,0,16.0,1.0,0.0,22.0,104166.0,596.0
+JC-202511-citibike-tripdata.csv.zip,76724,0,0.0,0.0,7.0,22.0,76695.0,448.0
+JC-202512-citibike-tripdata.csv.zip,48474,0,0.0,0.0,0.0,57.0,48417.0,553.0
+JC-202601-citibike-tripdata.zip,40044,0,0.0,1.0,0.0,95.0,39948.0,737.0
+JC-202602-citibike-tripdata.csv.zip,25809,0,0.0,0.0,0.0,50.0,25759.0,367.0
+JC-202603-citibike-tripdata.csv.zip,62367,0,0.0,0.0,0.0,41.0,62326.0,397.0
+JC-202604-citibike-tripdata.zip,82272,18,0.0,0.0,0.0,53.0,82201.0,392.0
+JC-202605-citibike-tripdata.csv.zip,95350,0,0.0,0.0,0.0,48.0,95302.0,308.0
+JC-202606-citibike-tripdata.csv.zip,109897,0,0.0,0.0,0.0,49.0,109848.0,338.0
+JC-202607-citibike-tripdata.csv.zip,109095,0,0.0,0.0,0.0,44.0,109051.0,286.0
+JC-202608-citibike-tripdata.csv.zip,111227,0,0.0,2.0,0.0,43.0,111182.0,305.0
+JC-202609-citibike-tripdata.csv.zip,106628,0,0.0,0.0,0.0,37.0,106591.0,297.0

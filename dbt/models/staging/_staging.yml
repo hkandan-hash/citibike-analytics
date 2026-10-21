@@ -1,0 +1,30 @@
+﻿version: 2
+
+models:
+  - name: stg_citibike__trips
+    description: Typed trips, deduplicated on ride_id. No rows are filtered out here except duplicates.
+    columns:
+      - name: ride_id
+        data_tests: [unique, not_null]
+      - name: rideable_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["classic_bike", "electric_bike"]
+      - name: rider_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["member", "casual"]
+      - name: started_at
+        data_tests: [not_null]
+      - name: ended_at
+        data_tests: [not_null]
+
+  - name: stg_weather__daily
+    description: Daily weather for Jersey City (ERA5 reanalysis via Open-Meteo, so gridded estimates, not a station reading).
+    columns:
+      - name: weather_date
+        data_tests: [unique, not_null]
+      - name: precipitation_mm
+        data_tests: [not_null]

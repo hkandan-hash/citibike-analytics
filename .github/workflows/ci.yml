@@ -1,0 +1,30 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    env:
+      DBT_PROFILES_DIR: ${{ github.workspace }}/dbt
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Unit tests
+        run: pytest -q
+      # End-to-end smoke test on one month of real data: download, load, dbt build (models + 39 tests).
+      - name: Extract
+        run: python -m pipeline.run extract --start 2026-09 --end 2026-09
+      - name: Load
+        run: python -m pipeline.run load --start 2026-09 --end 2026-09
+      - name: Transform and test (dbt build)
+        run: python -m pipeline.run transform --start 2026-09 --end 2026-09
+      - name: Source freshness
+        run: dbt source freshness --project-dir dbt
+        env:
+          DUCKDB_PATH: ${{ github.workspace }}/data/warehouse.duckdb
+      # Confirms every model and macro resolves for the Snowflake adapter (no connection needed).
+      - name: Parse for Snowflake
+        run: dbt parse --project-dir dbt --target snowflake

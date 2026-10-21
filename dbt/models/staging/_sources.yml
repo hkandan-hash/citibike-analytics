@@ -1,0 +1,27 @@
+﻿version: 2
+
+sources:
+  - name: raw
+    description: Files loaded as-is (all text) by pipeline/load.py. One batch per source file.
+    schema: raw
+    tables:
+      - name: citibike_trips
+        description: Citi Bike Jersey City / Hoboken trip records from the public monthly files.
+        config:
+          loaded_at_field: _loaded_at
+          freshness:
+            warn_after: { count: 45, period: day }
+            error_after: { count: 75, period: day }
+        columns:
+          - name: ride_id
+            data_tests: [not_null]
+          - name: _source_file
+            data_tests: [not_null]
+
+      - name: weather_daily
+        description: Daily weather for Jersey City from the Open-Meteo archive.
+        config:
+          loaded_at_field: _loaded_at
+
+      - name: load_log
+        description: One row per loaded file, with row count and SHA-256 checksum.

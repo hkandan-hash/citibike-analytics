@@ -1,0 +1,20 @@
+citibike:
+  target: dev
+  outputs:
+    # Local development and CI: a DuckDB file, no account needed.
+    dev:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH', '../data/warehouse.duckdb') }}"
+      threads: 4
+
+    # Snowflake. Set these environment variables (never commit credentials).
+    snowflake:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT', 'not-set') }}"
+      user: "{{ env_var('SNOWFLAKE_USER', 'not-set') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD', 'not-set') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE', 'TRANSFORMER') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'TRANSFORMING') }}"
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'CITIBIKE') }}"
+      schema: analytics
+      threads: 8

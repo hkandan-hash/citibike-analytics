@@ -1,0 +1,93 @@
+version: 2
+
+models:
+  - name: fct_trips
+    description: One row per valid trip in the analysis window. See int_trips__classified for exclusion rules.
+    columns:
+      - name: ride_id
+        data_tests: [unique, not_null]
+      - name: trip_date
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_day
+      - name: start_station_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_stations')
+                field: station_id
+      - name: end_station_id
+        description: Null when the bike was not returned to a dock (lost, or a dockless e-bike end).
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_stations')
+                field: station_id
+      - name: start_hour
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+                quote: false
+      - name: start_area
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Jersey City", "Hoboken", "New York City"]
+
+  - name: dim_stations
+    description: Every dock seen in valid trips, named by its most recent name.
+    columns:
+      - name: station_id
+        data_tests: [unique, not_null]
+      - name: area
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["Jersey City", "Hoboken", "New York City"]
+
+  - name: dim_date
+    columns:
+      - name: date_day
+        data_tests: [unique, not_null]
+      - name: day_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Workday", "Weekend/holiday"]
+
+  - name: agg_daily_ridership
+    description: One row per day with ridership mix and weather; the main input for trend and weather analysis.
+    columns:
+      - name: date_day
+        data_tests: [unique, not_null]
+      - name: temp_mean_c
+        description: Weather must exist for every day in the window.
+        data_tests: [not_null]
+
+  - name: agg_hourly_demand
+    data_tests:
+      - dbt_project_unique_combination:
+          arguments:
+            columns: [day_type, start_hour, rider_type]
+
+  - name: agg_station_daily_flow
+    data_tests:
+      - dbt_project_unique_combination:
+          arguments:
+            columns: [station_id, flow_date]
+
+  - name: agg_station_summary
+    columns:
+      - name: station_id
+        data_tests: [unique, not_null]
+
+  - name: agg_data_quality
+    columns:
+      - name: source_file
+        data_tests: [unique, not_null]
